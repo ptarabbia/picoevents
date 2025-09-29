@@ -36,8 +36,12 @@ Now any object in the UI can change the state of the button by calling:
 ```
 buttonStateChangedEvent.notify(value);
 ```
-and any object in the UI can be notifed of button change by adding:
+or the shortened version:
+```
+buttonStateChangedEvent(value);
+```
 
+and any object in the UI can be notified of button change by adding:
 ```
 buttonStateChangedEvent.add([&](bool v) { dosomething.... });
 ```
@@ -53,3 +57,26 @@ notifier.trigger();  // call buttonStateChangedEvent.notify(false);
 ```
 That way you can prepare a notification on a thread, and trigger it on
 a different one.
+
+Adding a callback means you also need to remove it at some point.
+Event::add() returns a CallbackID that can be passed to Event::remove()
+
+Since it's sometimes tedious to keep track of all the added callbacks, especially 
+if you have a listener class that listens to a lot of things, you can inherit from
+the ScopedCallbacksHolder class instead, like this:
+```
+class A: public ScopedCallbacksHolder
+{
+    A(Event<int>& e)
+    {
+        addCallback(e, [](const int & data)
+        {
+            // do something
+        };
+    }
+    ~A()
+    {
+        // callback will be automatically removed
+    }
+};
+```
