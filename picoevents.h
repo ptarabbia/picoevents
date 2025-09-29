@@ -26,10 +26,13 @@
 */
 #pragma once
 
-#include <list>
+
 #include <functional>
+#include <list>
+#include <memory>
 #include <tuple>
 #include <utility>
+#include <vector>
 
 /*
  A simple mechanism to notify events between various UI elements
